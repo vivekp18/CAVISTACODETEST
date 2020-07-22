@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context=".view.fragments.ImageShapeDetailsFragment">
+
+        <ImageView
+            android:id="@+id/ivShapes"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:layout_below="@+id/ivShapes"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/_25sdp"
+            android:weightSum="2"
+            android:background="@drawable/custom_edittext_style"
+            android:layout_height="wrap_content">
+
+            <com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular
+                android:layout_marginTop="@dimen/_10sdp"
+                android:id="@+id/edtComments"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_width="0dp"
+                android:layout_weight="1.8"
+                android:layout_height="wrap_content">
+
+            </com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular>
+
+            <com.etpl.mcmsuser.uibase.buttons.CustomButtonMedium
+                android:text="@string/str_submit"
+                android:id="@+id/btnSubmitComments"
+                android:layout_weight="0"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.etpl.mcmsuser.uibase.buttons.CustomButtonMedium>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>
