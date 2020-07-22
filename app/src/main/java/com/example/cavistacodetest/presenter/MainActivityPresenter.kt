@@ -18,6 +18,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 import android.content.ContentValues.TAG
+import android.view.Window
 import com.example.cavistacodetest.view.activity.MainActivity
 import com.example.cavistacodetest.R
 import com.example.cavistacodetest.callbacks.OkCancelCallback
@@ -25,6 +26,7 @@ import com.example.cavistacodetest.contants.ApiConstants
 import com.example.cavistacodetest.contract.MainContract
 import com.example.cavistacodetest.network.ApiClient
 import com.example.cavistacodetest.network.ApiInterface
+import com.example.cavistacodetest.utilities.AppDetails
 
 class MainActivityPresenter(private val mView: MainContract.View) : MainContract.Presenter {
     private val model: MainContract.Model? = null
@@ -62,15 +64,22 @@ class MainActivityPresenter(private val mView: MainContract.View) : MainContract
     }
 
     private fun initAndShowProgressBar(context: Context) {
-        progressDialog = ProgressDialog(context)
-        progressDialog!!.setMessage(context.getString(R.string.str_please_wait))
-        progressDialog!!.isIndeterminate = true
-        progressDialog!!.setCancelable(false)
         try {
+            if (progressDialog != null) {
+                progressDialog!!.dismiss()
+            }
+
+            progressDialog = null
+
+            progressDialog = ProgressDialog(AppDetails.activity)
+            progressDialog!!.setMessage(context.getString(R.string.str_please_wait))
+            progressDialog!!.isIndeterminate = true
+            progressDialog!!.setCancelable(false)
             progressDialog!!.show()
         } catch (e: Exception) {
-            Log.e("TAG", "initAndShowProgressBar: $e")
+            Log.e(TAG, "initAndShowProgressBar: $e")
         }
+
     }
 
     override fun onClick(

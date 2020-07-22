@@ -9,6 +9,8 @@ import com.example.cavistacodetest.database.Dao.ImageCommentsDao
 import com.example.cavistacodetest.model.Image
 import com.example.cavistacodetest.model.ImageShapes
 import com.example.cavistacodetest.presenter.MainActivityPresenter
+import com.example.cavistacodetest.utilities.AppDetails
+import com.example.cavistacodetest.view.activity.MainActivity
 import com.google.gson.Gson
 
 class ImageShapesRepository constructor(val application: Application) : MainContract.View {
@@ -36,7 +38,7 @@ class ImageShapesRepository constructor(val application: Application) : MainCont
         presenter!!.onClick(
             ApiConstants.GET_IMAGES,
             arrayOf("Client-ID 137cda6b5008a7c", searchText),
-            application.applicationContext,
+           AppDetails.activity!! ,
             true
         )
     }
