@@ -100,7 +100,6 @@ class MainActivityPresenter(private val mView: MainContract.View) : MainContract
 
         when (caseConstants) {
 
-            /*---------------EOF Ritesh------------------------*/
         }
 
     }
