@@ -2,29 +2,28 @@ package com.example.cavistacodetest.view.fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView.OnEditorActionListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.cavistacodetest.R
 import com.example.cavistacodetest.adapter.ImagesAdapter
+import com.example.cavistacodetest.contants.CLIENT_ID
 import com.example.cavistacodetest.databinding.FragmentHomeBinding
 import com.example.cavistacodetest.model.Image
-import com.example.cavistacodetest.utilities.recyclerview.EndlessRecyclerViewScrollListener
 import com.example.cavistacodetest.view.activity.MainActivity
 import com.example.cavistacodetest.viewmodel.ImagesShapesViewModel
-import kotlinx.android.synthetic.main.fragment_home.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
@@ -35,8 +34,10 @@ class HomeFragment : Fragment() {
 
     private var imageList: ArrayList<Image>?=null
 
-    var adapter:ImagesAdapter?=null
-    var handler:Handler?=null
+    private val DELAY: Long = 250 // milliseconds
+
+    private var searchTask : Runnable ?=null
+    private val mHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,15 +53,15 @@ class HomeFragment : Fragment() {
 
     private fun init() {
         imageList = ArrayList()
-        handler = Handler()
 
         vm= ViewModelProviders.of(this@HomeFragment).get(ImagesShapesViewModel::class.java)
 
+        /**
+         * Drawable Right search icon click listner
+         * */
+
         binding?.edtSearch?.setOnTouchListener(OnTouchListener { v, event ->
-            val DRAWABLE_LEFT = 0
-            val DRAWABLE_TOP = 1
             val DRAWABLE_RIGHT = 2
-            val DRAWABLE_BOTTOM = 3
             if (event.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= binding?.edtSearch?.right!! - binding?.edtSearch?.compoundDrawables?.get(DRAWABLE_RIGHT)?.bounds?.width()!!
                 ) {
@@ -72,18 +73,38 @@ class HomeFragment : Fragment() {
             false
         })
 
-        binding?.edtSearch?.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+        /**
+        * For debounce of 250 MS
+        * */
+        binding?.edtSearch?.addTextChangedListener(
+            object : TextWatcher {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                }
+
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable) {
+                    mHandler.removeCallbacks(searchTask!!);
+                    mHandler.postDelayed(searchTask!!, DELAY)
+                }
+            })
+
+            searchTask = Runnable {
                 performSearchOperation()
-                return@OnEditorActionListener true
             }
-            false
-        })
 
     }
 
+
+
+
+
     fun performSearchOperation(){
-        vm!!.getDataFromNetwork(binding?.edtSearch?.text.toString())
+
+        vm!!.getDataFromNetwork( CLIENT_ID,binding?.edtSearch?.text.toString())
+
         vm!!.allImageShapes?.observe(this, Observer {
             if (it.isNotEmpty()) {
                 binding!!.rvImageShapes.visibility = View.VISIBLE

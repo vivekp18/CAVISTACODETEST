@@ -16,8 +16,8 @@ class ImagesShapesViewModel constructor (application: Application) : AndroidView
         allImageShapes = mRepository.listLiveData!!
     }
 
-    internal fun getDataFromNetwork(searchText: String) {
-        mRepository.getDataFromNetwork(searchText)
+    internal fun getDataFromNetwork(client_id:String,searchText: String) {
+        mRepository.getDataFromNetwork(client_id,searchText)
     }
 
 }

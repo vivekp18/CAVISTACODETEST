@@ -34,13 +34,8 @@ class ImageShapesRepository constructor(val application: Application) : MainCont
     }
 
 
-    fun getDataFromNetwork(searchText :String) {
-        presenter!!.onClick(
-            ApiConstants.GET_IMAGES,
-            arrayOf("Client-ID 137cda6b5008a7c", searchText),
-           AppDetails.activity!! ,
-            true
-        )
+    fun getDataFromNetwork(client_id:String,searchText :String) {
+        presenter!!.onClick(ApiConstants.GET_IMAGES, arrayOf(client_id, searchText), AppDetails.activity!! , true)
     }
 
     override fun setViewData(data: String, view: ApiConstants) {

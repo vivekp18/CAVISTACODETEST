@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -17,6 +18,8 @@ import com.example.cavistacodetest.database.AppDatabase
 import com.example.cavistacodetest.database.Dao.ImageCommentsDao
 import com.example.cavistacodetest.databinding.FragmentImageShapeDetailsBinding
 import com.example.cavistacodetest.model.ImageComments
+import com.example.cavistacodetest.utilities.AppDetails.activity
+import com.example.cavistacodetest.view.activity.MainActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_image_shape_details.*
 import java.util.concurrent.Executor
@@ -34,6 +37,7 @@ class ImageShapeDetailsFragment : Fragment() {
     var mExecutor:Executor?=null
     var imageListItems : ArrayList<ImageComments>?=null
     var imageCommentsData :LiveData<ImageComments>?=null
+    var insertedId : Long?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,6 @@ class ImageShapeDetailsFragment : Fragment() {
     fun init(){
         database= AppDatabase.getDatabase(context!!)
         imagesShapeDao = database!!.imageShapeDao()
-        //imageComments = ImageComments()
         mExecutor = Executors.newSingleThreadExecutor()
         imageListItems =  arrayListOf()
 
@@ -61,7 +64,6 @@ class ImageShapeDetailsFragment : Fragment() {
             imageComments?.imageId = image_id
         }
 
-        Log.d("Image url is :->" ,image_url.toString())
 
         listOfAllEntries = database!!.imageShapeDao().getAllImageShapesList
 
@@ -72,9 +74,6 @@ class ImageShapeDetailsFragment : Fragment() {
                 if( it != null){
                     binding!!.edtComments.setText(it.comments)
                 }
-
-                //edtComment.setTit.comments
-                //Log.d("Image comments is " ,it.comments.toString())
             })
 
         listOfAllEntries?.observe(
@@ -92,21 +91,17 @@ class ImageShapeDetailsFragment : Fragment() {
 
         binding?.btnSubmitComments?.setOnClickListener {
 
-            if(containsName(imageListItems!!,image_id)){
-                updateAsyncTask(imagesShapeDao!!).execute(ImageComments(image_id,edtComments.text.toString()))
-            }else{
-                insertAsyncTask(imagesShapeDao!!).execute(ImageComments(image_id,edtComments.text.toString()))
+            if(isCommentsValid()){
+                var id :Long?=null
+                if(containsName(imageListItems!!,image_id)){
+                    updateAsyncTask(imagesShapeDao!!).execute(ImageComments(image_id,edtComments.text.toString()))
+                }else{
+                    insertAsyncTask(imagesShapeDao!!).execute(ImageComments(image_id,edtComments.text.toString()))
+
+                }
+
+                listOfAllEntries?.observe(this, Observer {it.forEach { imageListItems?.add(it) } })
             }
-
-            listOfAllEntries?.observe(
-                this, Observer {it.forEach {
-                    imageListItems?.add(it)
-
-                    Log.d("Data from Room db",it.imageId.toString())
-                    Log.d("Data from Room db",it.comments.toString())
-                }//
-                })
-
         }
     }
 
@@ -115,6 +110,14 @@ class ImageShapeDetailsFragment : Fragment() {
         return list.stream().filter(Predicate<ImageComments> { o: ImageComments -> o.imageId.equals(imageId) }).findFirst().isPresent()
     }
 
+    fun isCommentsValid():Boolean{
+
+        if(binding!!.edtComments.text.isNullOrBlank()){
+            Toast.makeText(activity ,"Please enter comments for images",Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
 
 
     private class insertAsyncTask internal constructor(dao: ImageCommentsDao) :
@@ -124,6 +127,11 @@ class ImageShapeDetailsFragment : Fragment() {
 
             params[0]?.let { mAsyncTaskDao.insert(it) }
             return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            super.onPostExecute(result)
+            Toast.makeText(activity,"Comments has been inserted successfully ",Toast.LENGTH_SHORT).show()
         }
 
         init {
@@ -152,22 +160,7 @@ class ImageShapeDetailsFragment : Fragment() {
         }
     }
 
-//    private class GetUsersAsyncTask internal constructor(dao: ImageCommentsDao) :
-//        AsyncTask<ImageComments?, Void?, Void?>() {
-//        var data :LiveData<ImageComments>?=null
-//        private val mAsyncTaskDao: ImageCommentsDao
-//         override fun doInBackground(vararg params: LiveData<ImageComments>?): LiveData<ImageComments>? {
-//             data =  mAsyncTaskDao.getSingleImageComment(params[0]?.imageId.toString())
-//
-//            return data
-//        }
-//
-//        init {
-//            mAsyncTaskDao = dao
-//        }
-//
-//
-//    }
+
 
 
 }

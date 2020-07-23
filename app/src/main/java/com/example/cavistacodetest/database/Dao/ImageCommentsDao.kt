@@ -18,7 +18,7 @@ import com.example.cavistacodetest.model.ImageComments
     fun getSingleImageComment(image_id:String) : LiveData<ImageComments>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(imageShapes: ImageComments)
+    fun insert(imageShapes: ImageComments) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(imageShapes: List<ImageComments>)

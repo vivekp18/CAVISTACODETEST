@@ -9,27 +9,37 @@
         android:layout_height="match_parent"
         tools:context=".view.fragments.HomeFragment">
 
-
-        <com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular
-           android:id="@+id/edtSearch"
-            android:layout_margin="@dimen/_5sdp"
+        <LinearLayout
+            android:id="@+id/llEditSerachText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:hint="@string/str_search_here"
-            android:drawableEnd="@drawable/search"
-            tools:layout_constraintRight_creator="1"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:imeOptions="actionSearch"
-            tools:layout_constraintTop_creator="1"
-            android:drawablePadding="@dimen/_5sdp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp">
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/layout_background">
 
-        </com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular>
+            <com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular
+                android:id="@+id/edtSearch"
+                android:hint="@string/str_search_here"
+                android:drawableEnd="@drawable/search"
+                tools:layout_constraintRight_creator="1"
+                android:maxLines="1"
+                android:layout_margin="@dimen/_5sdp"
+                android:singleLine="true"
+                android:padding="@dimen/_10sdp"
+                android:imeOptions="actionSearch"
+                tools:layout_constraintTop_creator="1"
+                android:drawablePadding="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp">
+
+            </com.example.cavistacodetest.uibase.edittexts.CustomEditTextRegular>
+        </LinearLayout>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
-            app:layout_constraintTop_toBottomOf="@id/edtSearch"
+            app:layout_constraintTop_toBottomOf="@id/llEditSerachText"
             android:id="@+id/rvImageShapes"
             android:layout_margin="@dimen/_5sdp"
             android:layout_width="match_parent"
