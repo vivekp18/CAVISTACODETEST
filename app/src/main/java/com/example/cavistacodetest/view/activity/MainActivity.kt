@@ -1,11 +1,11 @@
 package com.example.cavistacodetest.view.activity
 
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -29,17 +29,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun init(){
         setSupportActionBar(binding!!.toolbar.toolbar)
+        supportActionBar!!.setDisplayShowTitleEnabled(false)
         closeKeyboard()
         hideSoftKeyboard()
+
         /** for handling title on toolbar  */
         supportFragmentManager.addOnBackStackChangedListener {
             if (supportFragmentManager.backStackEntryCount == 0) {
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 setToolBarTitle(getString(R.string.str_home))
             } else {
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
                 supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount-1 ).name?.let {
 
-                    if (supportFragmentManager.backStackEntryCount >= 1){
+                    if (supportFragmentManager.backStackEntryCount >0){
+                        supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         supportActionBar!!.setHomeAsUpIndicator(R.drawable.back)
                         setToolBarTitle(it)
                     }
@@ -47,7 +51,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
+
+            binding!!.toolbar.toolbar.setNavigationOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View?) {
+                    onBackPressed()
+                }
+            })
         }
+
+
     }
 
     private fun initHomeFragment(bundle: Bundle?) {
